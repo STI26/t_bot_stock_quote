@@ -23,6 +23,15 @@ for parameter in ['TOKEN', 'API_KEY']:
 TELEGRAM_URL = f'https://api.telegram.org/bot{conf.TOKEN}/'
 BASE_URL = f'/{conf.TOKEN}/'
 API_KEY = conf.API_KEY
+GLOBAL_COMMANDS = {
+    'start': """Вас приветствует IEXStockQuoteBot бот.
+                Для получения текущих котировок введите "/" + тикер.\n
+                Пример: /AAPL""",
+    'help': """Для получения текущих котировок введите "/" + тикер.\n
+               Пример: /AAPL
+               Все данные взяты с IEX Cloud Financial Data API:
+               <a href="https://iexcloud.io/">https://iexcloud.io/</a>"""
+}
 
 
 # Configure application
@@ -51,7 +60,6 @@ def format_message(obj):
     )
 
     return md
-# https://api.telegram.org/bot1442875355:AAEmoc1YyMppJxDNuJf9RlqXAG0RcFJ7ZzY/setWebhook?url=https://13581086b42c.ngrok.io/1442875355:AAEmoc1YyMppJxDNuJf9RlqXAG0RcFJ7ZzY/
 
 
 @app.route(BASE_URL, methods=['POST'])
@@ -67,6 +75,11 @@ def index():
         if symbol is None:
             return jsonify(response)
 
+        # Check global commands
+        if GLOBAL_COMMANDS.get(symbol):
+            send_message(chat_id, GLOBAL_COMMANDS[symbol])
+
+        # Get quote
         obj = get_quote(symbol, API_KEY)
         if obj is not None:
             send_message(chat_id, format_message(obj))
