@@ -24,13 +24,13 @@ TELEGRAM_URL = f'https://api.telegram.org/bot{conf.TOKEN}/'
 BASE_URL = f'/{conf.TOKEN}/'
 API_KEY = conf.API_KEY
 GLOBAL_COMMANDS = {
-    'start': """Вас приветствует IEXStockQuoteBot бот.
-                Для получения текущих котировок введите "/" + тикер.\n
-                Пример: /AAPL""",
-    'help': """Для получения текущих котировок введите "/" + тикер.\n
-               Пример: /AAPL
-               Все данные взяты с IEX Cloud Financial Data API:
-               <a href="https://iexcloud.io/">https://iexcloud.io/</a>"""
+    'start': '<b>Вас приветствует IEXStockQuoteBot бот.</b>\n \
+              Для получения текущих котировок введите "/" + тикер.\n \
+              Пример: /AAPL',
+    'help': 'Для получения текущих котировок введите "/" + тикер.\n \
+             Пример: /AAPL\n \
+             Все данные взяты с IEX Cloud Financial Data API:\n \
+             <a href="https://iexcloud.io/">https://iexcloud.io/</a>'
 }
 
 
@@ -78,6 +78,7 @@ def index():
         # Check global commands
         if GLOBAL_COMMANDS.get(symbol):
             send_message(chat_id, GLOBAL_COMMANDS[symbol])
+            return jsonify(response)
 
         # Get quote
         obj = get_quote(symbol, API_KEY)
